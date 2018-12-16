@@ -21,12 +21,13 @@ import java.util.Enumeration;
 public class MainActivity extends AppCompatActivity
 {
     TextView myTV;
-    Button btncliente, btnservidor;
-    EditText ipServer;
+    Button btncliente, btnservidor,bEnviar, bSalir;
+    EditText ipServer, etTexto;
 
     Socket socket;
     ServerSocket serverSocket;
     boolean ConectionEstablished;
+    boolean server = false;
 
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
@@ -48,8 +49,26 @@ public class MainActivity extends AppCompatActivity
         btncliente=(Button)findViewById(R.id.buttonCliente);
         btnservidor=(Button)findViewById(R.id.buttonServer);
         ipServer=(EditText) findViewById(R.id.ipServer);
+        bSalir = (Button)findViewById(R.id.bCerrar);
 
         myTV=(TextView) findViewById(R.id.tvSalida);
+
+        bEnviar = (Button)findViewById(R.id.bEnviar);
+        bEnviar.setEnabled(false);
+        etTexto = (EditText) findViewById(R.id.etTexto);
+        etTexto.setEnabled(false);
+
+        bSalir.setEnabled(false);
+
+        bSalir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DisconnectSockets();
+            }
+        });
+
+
+
     }
 
     public void startServer(View v)
@@ -57,9 +76,19 @@ public class MainActivity extends AppCompatActivity
         btncliente.setEnabled(false);
         btnservidor.setEnabled(false);
         ipServer.setEnabled(false);
-
+        server = true;
         SetText("\nComenzamos Servidor!");
         (HiloEspera=new WaitingClientThread()).start();
+        bEnviar.setEnabled(true);
+        etTexto.setEnabled(true);
+        bSalir.setEnabled(true);
+        bEnviar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                    (new EnvioMensajesServidor()).start();
+            }
+        });
     }
 
     public void startClient(View v)
@@ -76,6 +105,18 @@ public class MainActivity extends AppCompatActivity
             SetText("\nComenzamos Cliente!");
             AppenText("\nNos intentamos conectar al servidor: "+TheIP);
         }
+        bSalir.setEnabled(true);
+        bEnviar.setEnabled(true);
+        etTexto.setEnabled(true);
+        bEnviar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                    new EnvioMensajesCliente().start();
+
+            }
+        });
     }
 
     public void AppenText(String text)
@@ -88,7 +129,7 @@ public class MainActivity extends AppCompatActivity
         runOnUiThread(new setUITextView(text));
     }
 
-    private class WaitingClientThread extends Thread
+    public class WaitingClientThread extends Thread
     {
         public void run()
         {
@@ -116,7 +157,7 @@ public class MainActivity extends AppCompatActivity
                 (HiloEscucha=new GetMessagesThread()).start();
 
                 //Enviamos mensajes desde el servidor.
-                (new EnvioMensajesServidor()).start();
+
                 HiloEspera=null;
             }
             catch (IOException e)
@@ -126,7 +167,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private class ClientConnectToServer extends Thread
+    public class ClientConnectToServer extends Thread
     {
         String mIp;
         ClientConnectToServer(String ip){mIp=ip;}
@@ -147,7 +188,7 @@ public class MainActivity extends AppCompatActivity
                 //Iniciamos el hilo para la escucha y procesado de mensajes
                 (HiloEscucha=new GetMessagesThread()).start();
 
-                new EnvioMensajesCliente().start();
+
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -159,32 +200,43 @@ public class MainActivity extends AppCompatActivity
 
     private class EnvioMensajesServidor extends Thread
     {
+
         public void run()
         {
-            String messages[]={"Bienvenido usuario a mi chat", "¿Estás bien?", "Bueno, pues molt bé, pues adiós"};
-            int sleeptime[]={1000, 2000, 2000};
-            sendVariousMessages(messages, sleeptime);
-            DisconnectSockets();
+
+            //String messages= "Bienvenido usuario a mi chat ¿Estás bien? Bueno, pues molt bé, pues adiós";
+         //  final int sleeptime=1000;
+
+                    String messages = etTexto.getText().toString();
+                   sendMessage(messages);
+                    etTexto.setText("");
+
+
+
+           // DisconnectSockets();
         }
     }
 
-    private class EnvioMensajesCliente extends Thread
+    public class EnvioMensajesCliente extends Thread
     {
         public void run()
         {
-            String messages[]={"Hola servidor", "No mucho, pero no te voy a contar mi vida", "Pues adiós :("};
-            int sleeptime[]={1000, 2000, 1000};
+            //String messages="Hola servidor No mucho, pero no te voy a contar mi vida Pues adiós :(";
+           // final int sleeptime=1000;
             try {
                 Thread.sleep(1000);
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            sendVariousMessages(messages, sleeptime);
-            DisconnectSockets();
+            //sendVariousMessages(messages,sleeptime);
+
+
+           // DisconnectSockets();
         }
     }
 
-    private void DisconnectSockets()
+    public void DisconnectSockets()
     {
         if(ConectionEstablished)
         {
@@ -233,14 +285,14 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void sendVariousMessages(String[] msgs, int[] time)
+    public void sendVariousMessages(String msgs, int time)
     {
-        if(msgs!=null && time!=null && msgs.length==time.length)
-            for(int i=0; i<msgs.length; i++)
+        if(msgs!=null  /*&&time!=null && msgs.length==time.length*/)
+            for(int i=0; i<1; i++)
             {
-                sendMessage(msgs[i]);
+                sendMessage(msgs);
                 try {
-                    Thread.sleep(time[i]);
+                   Thread.sleep(time);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     return;
@@ -253,7 +305,7 @@ public class MainActivity extends AppCompatActivity
         new SendMessageSocketThread(txt).start();
     }
 
-    private class SendMessageSocketThread extends Thread
+    public class SendMessageSocketThread extends Thread
     {
         private String msg;
 
@@ -309,7 +361,7 @@ public class MainActivity extends AppCompatActivity
         return ip.toString();
     }
 
-    private class GetMessagesThread extends Thread
+    public class GetMessagesThread extends Thread
     {
         private boolean executing;
         private String line;
@@ -350,14 +402,14 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    protected class setUITextView implements Runnable
+    public class setUITextView implements Runnable
     {
         private String text;
         private setUITextView(String text){this.text=text;}
         public void run(){myTV.setText(text);}
     }
 
-    protected class appendUITextView implements Runnable
+    public class appendUITextView implements Runnable
     {
         private String text;
         private appendUITextView(String text){this.text=text;}
@@ -371,3 +423,4 @@ public class MainActivity extends AppCompatActivity
     }
 
 }
+
