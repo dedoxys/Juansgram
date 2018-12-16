@@ -22,7 +22,8 @@ public class MainActivity extends AppCompatActivity
 {
     TextView myTV;
     Button btncliente, btnservidor,bEnviar, bSalir;
-    EditText ipServer, etTexto;
+    EditText ipServer;
+    EditText etTexto;
 
     Socket socket;
     ServerSocket serverSocket;
@@ -203,16 +204,11 @@ public class MainActivity extends AppCompatActivity
 
         public void run()
         {
-
             //String messages= "Bienvenido usuario a mi chat ¿Estás bien? Bueno, pues molt bé, pues adiós";
-         //  final int sleeptime=1000;
-
+            //  final int sleeptime=1000;
                     String messages = etTexto.getText().toString();
-                   sendMessage(messages);
-                    etTexto.setText("");
-
-
-
+                    sendMessage(messages);
+                    vaciarChat();
            // DisconnectSockets();
         }
     }
@@ -225,7 +221,9 @@ public class MainActivity extends AppCompatActivity
            // final int sleeptime=1000;
             try {
                 Thread.sleep(1000);
-
+                String messages = etTexto.getText().toString();
+                sendMessage(messages);
+                vaciarChat();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -303,6 +301,7 @@ public class MainActivity extends AppCompatActivity
     private void sendMessage(String txt)
     {
         new SendMessageSocketThread(txt).start();
+
     }
 
     public class SendMessageSocketThread extends Thread
@@ -421,6 +420,14 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
         DisconnectSockets();
     }
+    public  void vaciarChat(){
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                etTexto.setText("");
+            }
+        });
 
+    }
 }
 
