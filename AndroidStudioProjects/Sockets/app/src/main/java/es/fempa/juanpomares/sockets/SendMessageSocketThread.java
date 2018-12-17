@@ -4,10 +4,10 @@ import java.io.IOException;
 
 public class SendMessageSocketThread extends Thread{
 
-    MainActivity m;
+    pantallaTexto m;
     private String msg;
 
-    SendMessageSocketThread(String message, MainActivity _m)
+    SendMessageSocketThread(String message, pantallaTexto _m)
     {
         this.m = _m;
         msg=message;

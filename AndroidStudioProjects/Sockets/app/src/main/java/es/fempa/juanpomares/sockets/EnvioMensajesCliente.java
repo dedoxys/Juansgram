@@ -2,9 +2,9 @@ package es.fempa.juanpomares.sockets;
 
 public class EnvioMensajesCliente extends Thread {
 
-    MainActivity m;
+    pantallaTexto m;
 
-    public EnvioMensajesCliente(MainActivity _m){
+    public EnvioMensajesCliente(pantallaTexto _m){
         this.m = _m;
     }
     public void run()

@@ -22,22 +22,21 @@ import java.util.Enumeration;
 public class MainActivity extends AppCompatActivity
 {
     TextView myTV;
-    Button btncliente, btnservidor,bEnviar, bSalir;
+    Button btncliente, btnservidor;
     EditText ipServer;
-    EditText etTexto;
 
     Socket socket;
     ServerSocket serverSocket;
+
     boolean ConectionEstablished;
-    boolean server = false;
 
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
 
     int mPuerto=1048;
+
     //Hilo para escuchar los mensajes que le lleguen por el socket
     GetMessagesThread HiloEscucha;
-
 
     /*Variable para el servidor*/
     WaitingClientThread HiloEspera;
@@ -51,23 +50,10 @@ public class MainActivity extends AppCompatActivity
         btncliente=(Button)findViewById(R.id.buttonCliente);
         btnservidor=(Button)findViewById(R.id.buttonServer);
         ipServer=(EditText) findViewById(R.id.ipServer);
-        bSalir = (Button)findViewById(R.id.bCerrar);
 
         myTV=(TextView) findViewById(R.id.tvSalida);
 
-        bEnviar = (Button)findViewById(R.id.bEnviar);
-        bEnviar.setEnabled(false);
-        etTexto = (EditText) findViewById(R.id.etTexto);
-        etTexto.setEnabled(false);
 
-        bSalir.setEnabled(false);
-
-        bSalir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DisconnectSockets();
-            }
-        });
 
 
 
@@ -75,23 +61,10 @@ public class MainActivity extends AppCompatActivity
 
     public void startServer(View v)
     {
-        btncliente.setEnabled(false);
-        btnservidor.setEnabled(false);
-        ipServer.setEnabled(false);
-        server = true;
-        SetText("\nComenzamos Servidor!");
-        (HiloEspera=new WaitingClientThread(this)).start();
-        bEnviar.setEnabled(true);
-        etTexto.setEnabled(true);
-        bSalir.setEnabled(true);
-        final MainActivity ma = this;
-        bEnviar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                    (new EnvioMensajesServidor(ma)).start();
-            }
-        });
+        Intent intent =  new Intent(this, pantallaTexto.class);
+        intent.putExtra("boolean", true);
+        startActivity(intent);
     }
 
     public void startClient(View v)
@@ -107,28 +80,16 @@ public class MainActivity extends AppCompatActivity
 
             (new ClientConnectToServer(TheIP, this)).start();
 
-
-            if(ConectionEstablished){
-                Intent intent =  new Intent(this, pantallaTexto.class);
-                startActivity(intent);
-            }else{
-                AppenText("\nNo se ha podido conectar");
-            }
-
         }
-        bSalir.setEnabled(true);
-        bEnviar.setEnabled(true);
-        etTexto.setEnabled(true);
-        final MainActivity ma = this;
-        bEnviar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
 
-                    new EnvioMensajesCliente(ma).start();
 
-            }
-        });
+
+    }
+
+    public void SetText(String text)
+    {
+        runOnUiThread(new setUITextView(text, this));
     }
 
     public void AppenText(String text)
@@ -137,60 +98,7 @@ public class MainActivity extends AppCompatActivity
         //runOnUiThread(new appendUITextView(text+"\n", this));
     }
 
-    public void SetText(String text)
-    {
-        runOnUiThread(new setUITextView(text, this));
-    }
 
-
-    public void DisconnectSockets()
-    {
-        if(ConectionEstablished)
-        {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run()
-                {
-                    btncliente.setEnabled(true);
-                    btnservidor.setEnabled(true);
-                    ipServer.setEnabled(true);
-                }
-            });
-            ConectionEstablished = false;
-
-            if (HiloEscucha != null)
-            {
-                HiloEscucha.setExecuting();
-                HiloEscucha.interrupt();
-                HiloEspera = null;
-            }
-
-            try {
-                if (dataInputStream != null)
-                    dataInputStream.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                dataInputStream = null;
-                try {
-                    if (dataOutputStream != null)
-                        dataOutputStream.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    dataOutputStream = null;
-                    try {
-                        if (socket != null)
-                            socket.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        socket = null;
-                    }
-                }
-            }
-        }
-    }
 
     /*public void sendVariousMessages(String msgs, int time)
     {
@@ -206,11 +114,7 @@ public class MainActivity extends AppCompatActivity
             }
     }*/
 
-    public void sendMessage(String txt)
-    {
-        new SendMessageSocketThread(txt,this).start();
 
-    }
 
 
     //Aqui obtenemos la IP de nuestro terminal
@@ -247,16 +151,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        DisconnectSockets();
+        //DisconnectSockets();
     }
-    public  void vaciarChat(){
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                etTexto.setText("");
-            }
-        });
 
-    }
 }
 

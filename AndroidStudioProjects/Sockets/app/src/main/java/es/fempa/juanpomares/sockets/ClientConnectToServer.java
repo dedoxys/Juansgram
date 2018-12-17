@@ -1,5 +1,7 @@
 package es.fempa.juanpomares.sockets;
 
+import android.content.Intent;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
@@ -25,6 +27,11 @@ public class ClientConnectToServer extends Thread {
             try {
                 m.dataInputStream = new DataInputStream(m.socket.getInputStream());
                 m.dataOutputStream = new DataOutputStream(m.socket.getOutputStream());
+
+                Intent intent =  new Intent(m, pantallaTexto.class);
+                intent.putExtra("boolean", false);
+                m.startActivity(intent);
+
             }catch(Exception e){ e.printStackTrace();}
 
             m.ConectionEstablished=true;
@@ -35,7 +42,7 @@ public class ClientConnectToServer extends Thread {
 
         } catch (Exception e) {
             e.printStackTrace();
-            m.AppenText("Error: " + e.getMessage());
+            //m.AppenText("Error: " + e.getMessage());
         }
     }
 }
