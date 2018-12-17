@@ -110,12 +110,13 @@ public class MainActivity extends AppCompatActivity
         bSalir.setEnabled(true);
         bEnviar.setEnabled(true);
         etTexto.setEnabled(true);
+        final MainActivity ma = this;
         bEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
 
-                    new EnvioMensajesCliente().start();
+                    new EnvioMensajesCliente(ma).start();
 
             }
         });
@@ -123,49 +124,14 @@ public class MainActivity extends AppCompatActivity
 
     public void AppenText(String text)
     {
-        runOnUiThread(new appendUITextView(text+"\n"));
+        runOnUiThread(new appendUITextView(text+"\n", this));
     }
 
     public void SetText(String text)
     {
-        runOnUiThread(new setUITextView(text));
+        runOnUiThread(new setUITextView(text, this));
     }
 
-
-    /*private class EnvioMensajesServidor extends Thread
-    {
-
-        public void run()
-        {
-            //String messages= "Bienvenido usuario a mi chat ¿Estás bien? Bueno, pues molt bé, pues adiós";
-            //  final int sleeptime=1000;
-                    String messages = etTexto.getText().toString();
-                    sendMessage(messages);
-                    vaciarChat();
-           // DisconnectSockets();
-        }
-    }*/
-
-    public class EnvioMensajesCliente extends Thread
-    {
-        public void run()
-        {
-            //String messages="Hola servidor No mucho, pero no te voy a contar mi vida Pues adiós :(";
-           // final int sleeptime=1000;
-            try {
-                Thread.sleep(1000);
-                String messages = etTexto.getText().toString();
-                sendMessage(messages);
-                vaciarChat();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            //sendVariousMessages(messages,sleeptime);
-
-
-           // DisconnectSockets();
-        }
-    }
 
     public void DisconnectSockets()
     {
@@ -216,60 +182,25 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void sendVariousMessages(String msgs, int time)
+    /*public void sendVariousMessages(String msgs, int time)
     {
-        if(msgs!=null  /*&&time!=null && msgs.length==time.length*/)
-            for(int i=0; i<1; i++)
-            {
+        if(msgs!=null  &&time!=null && msgs.length==time.length)
+            for (int i = 0; i < 1; i++) {
                 sendMessage(msgs);
                 try {
-                   Thread.sleep(time);
+                    Thread.sleep(time);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     return;
                 }
             }
-    }
+    }*/
 
     public void sendMessage(String txt)
     {
-        new SendMessageSocketThread(txt).start();
+        new SendMessageSocketThread(txt,this).start();
 
     }
-
-    public class SendMessageSocketThread extends Thread
-    {
-        private String msg;
-
-        SendMessageSocketThread(String message)
-        {
-            msg=message;
-        }
-
-        @Override
-        public void run()
-        {
-            try
-            {
-                dataOutputStream.writeUTF(msg);//Enviamos el mensaje
-                //dataOutputStream.close();
-                AppenText("Enviado: "+msg);
-            }catch (IOException e)
-            {
-                e.printStackTrace();
-                //message += "¡Algo fue mal! " + e.toString() + "\n";
-            }
-        }
-    }
-
-    public void setDataInputStream(DataInputStream _dataInputStream) {
-        this.dataInputStream = _dataInputStream;
-    }
-
-    public void setDataOutputStream(DataOutputStream _dataOutputStream) {
-       this.dataOutputStream = _dataOutputStream;
-    }
-
 
 
     //Aqui obtenemos la IP de nuestro terminal
@@ -301,61 +232,6 @@ public class MainActivity extends AppCompatActivity
         }
 
         return ip.toString();
-    }
-
-    /*public class GetMessagesThread extends Thread
-    {
-        private boolean executing;
-        private String line;
-
-
-        public void run()
-        {
-            executing=true;
-
-            while(executing)
-            {
-                line="";
-                line=ObtenerCadena();//Obtenemos la cadena del buffer
-                if(!line.equals("") && line.length()!=0)//Comprobamos que esa cadena tenga contenido
-                {
-                    AppenText("Recibido: "+line);//Procesamos la cadena recibida
-                }
-            }
-        }
-
-        private void setExecuting(){executing= false;}
-
-
-        private String ObtenerCadena()
-        {
-            String cadena="";
-
-            try {
-                cadena=dataInputStream.readUTF();//Leemos del datainputStream una cadena UTF
-                Log.d("ObtenerCadena", "Cadena reibida: "+cadena);
-
-            }catch(Exception e)
-            {
-                e.printStackTrace();
-                executing=false;
-            }
-            return cadena;
-        }
-    }*/
-
-    public class setUITextView implements Runnable
-    {
-        private String text;
-        private setUITextView(String text){this.text=text;}
-        public void run(){myTV.setText(text);}
-    }
-
-    public class appendUITextView implements Runnable
-    {
-        private String text;
-        private appendUITextView(String text){this.text=text;}
-        public void run(){myTV.append(text);}
     }
 
     @Override
