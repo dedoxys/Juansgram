@@ -1,5 +1,6 @@
 package es.fempa.juanpomares.sockets;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -102,10 +103,18 @@ public class MainActivity extends AppCompatActivity
             btnservidor.setEnabled(false);
             ipServer.setEnabled(false);
 
+            SetText("\nNos intentamos conectar al servidor: "+TheIP);
+
             (new ClientConnectToServer(TheIP, this)).start();
 
-            SetText("\nComenzamos Cliente!");
-            AppenText("\nNos intentamos conectar al servidor: "+TheIP);
+
+            if(ConectionEstablished){
+                Intent intent =  new Intent(this, pantallaTexto.class);
+                startActivity(intent);
+            }else{
+                AppenText("\nNo se ha podido conectar");
+            }
+
         }
         bSalir.setEnabled(true);
         bEnviar.setEnabled(true);
@@ -125,6 +134,7 @@ public class MainActivity extends AppCompatActivity
     public void AppenText(String text)
     {
         runOnUiThread(new appendUITextView(text+"\n", this));
+        //runOnUiThread(new appendUITextView(text+"\n", this));
     }
 
     public void SetText(String text)
