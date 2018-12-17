@@ -79,15 +79,16 @@ public class MainActivity extends AppCompatActivity
         ipServer.setEnabled(false);
         server = true;
         SetText("\nComenzamos Servidor!");
-        (HiloEspera=new WaitingClientThread()).start();
+        (HiloEspera=new WaitingClientThread(this)).start();
         bEnviar.setEnabled(true);
         etTexto.setEnabled(true);
         bSalir.setEnabled(true);
+        final MainActivity ma = this;
         bEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                    (new EnvioMensajesServidor()).start();
+                    (new EnvioMensajesServidor(ma)).start();
             }
         });
     }
@@ -101,7 +102,7 @@ public class MainActivity extends AppCompatActivity
             btnservidor.setEnabled(false);
             ipServer.setEnabled(false);
 
-            (new ClientConnectToServer(TheIP)).start();
+            (new ClientConnectToServer(TheIP, this)).start();
 
             SetText("\nComenzamos Cliente!");
             AppenText("\nNos intentamos conectar al servidor: "+TheIP);
@@ -130,76 +131,8 @@ public class MainActivity extends AppCompatActivity
         runOnUiThread(new setUITextView(text));
     }
 
-    public class WaitingClientThread extends Thread
-    {
-        public void run()
-        {
-            SetText("Esperando Usuario...");
-            try
-            {
-                //Abrimos el socket
-                serverSocket = new ServerSocket(mPuerto);
 
-                //Mostramos un mensaje para indicar que estamos esperando en la direccion ip y el puerto...
-                AppenText("Creado el servidor\n Dirección: "+getIpAddress()+" Puerto: "+serverSocket.getLocalPort());
-
-                //Creamos un socket que esta a la espera de una conexion de cliente
-                socket = serverSocket.accept();
-
-                //Una vez hay conexion con un cliente, creamos los streams de salida/entrada
-                try {
-                    dataInputStream = new DataInputStream(socket.getInputStream());
-                    dataOutputStream = new DataOutputStream(socket.getOutputStream());
-                }catch(Exception e){ e.printStackTrace();}
-
-                ConectionEstablished=true;
-
-                //Iniciamos el hilo para la escucha y procesado de mensajes
-                (HiloEscucha=new GetMessagesThread()).start();
-
-                //Enviamos mensajes desde el servidor.
-
-                HiloEspera=null;
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public class ClientConnectToServer extends Thread
-    {
-        String mIp;
-        ClientConnectToServer(String ip){mIp=ip;}
-        public void run()
-        {
-            // Connect to server
-            try {
-                SetText("Conectando con el servidor: " + mIp + ":" + mPuerto + "...\n\n");//Mostramos por la interfaz que nos hemos conectado al servidor} catch (IOException e) {
-
-                socket = new Socket(mIp, mPuerto);//Creamos el socket
-
-                try {
-                    dataInputStream = new DataInputStream(socket.getInputStream());
-                    dataOutputStream = new DataOutputStream(socket.getOutputStream());
-                }catch(Exception e){ e.printStackTrace();}
-
-                ConectionEstablished=true;
-                //Iniciamos el hilo para la escucha y procesado de mensajes
-                (HiloEscucha=new GetMessagesThread()).start();
-
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                AppenText("Error: " + e.getMessage());
-            }
-        }
-
-    }
-
-    private class EnvioMensajesServidor extends Thread
+    /*private class EnvioMensajesServidor extends Thread
     {
 
         public void run()
@@ -211,7 +144,7 @@ public class MainActivity extends AppCompatActivity
                     vaciarChat();
            // DisconnectSockets();
         }
-    }
+    }*/
 
     public class EnvioMensajesCliente extends Thread
     {
@@ -298,7 +231,7 @@ public class MainActivity extends AppCompatActivity
             }
     }
 
-    private void sendMessage(String txt)
+    public void sendMessage(String txt)
     {
         new SendMessageSocketThread(txt).start();
 
@@ -329,8 +262,18 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void setDataInputStream(DataInputStream _dataInputStream) {
+        this.dataInputStream = _dataInputStream;
+    }
+
+    public void setDataOutputStream(DataOutputStream _dataOutputStream) {
+       this.dataOutputStream = _dataOutputStream;
+    }
+
+
+
     //Aqui obtenemos la IP de nuestro terminal
-    private String getIpAddress()
+    public String getIpAddress()
     {
         StringBuilder ip = new StringBuilder();
         try
@@ -360,7 +303,7 @@ public class MainActivity extends AppCompatActivity
         return ip.toString();
     }
 
-    public class GetMessagesThread extends Thread
+    /*public class GetMessagesThread extends Thread
     {
         private boolean executing;
         private String line;
@@ -399,7 +342,7 @@ public class MainActivity extends AppCompatActivity
             }
             return cadena;
         }
-    }
+    }*/
 
     public class setUITextView implements Runnable
     {
