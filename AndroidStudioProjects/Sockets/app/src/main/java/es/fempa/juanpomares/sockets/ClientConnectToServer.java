@@ -30,6 +30,7 @@ public class ClientConnectToServer extends Thread {
 
                 Intent intent =  new Intent(m, pantallaTexto.class);
                 intent.putExtra("boolean", false);
+
                 m.startActivity(intent);
 
             }catch(Exception e){ e.printStackTrace();}

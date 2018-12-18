@@ -9,9 +9,9 @@ import java.net.ServerSocket;
 
 public class WaitingClientThread extends Thread{
 
-    MainActivity m;
+    pantallaTexto m;
 
-    public WaitingClientThread(MainActivity _m){
+    public WaitingClientThread(pantallaTexto _m){
         this.m = _m;
     }
 

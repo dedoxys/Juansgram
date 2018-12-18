@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -17,6 +18,7 @@ public class pantallaTexto extends MainActivity {
     boolean servidor;
     Button bEnviar, bSalir;
     EditText etTexto;
+    TextView myTV;
 
     Socket socket;
     ServerSocket serverSocket;
@@ -43,6 +45,7 @@ public class pantallaTexto extends MainActivity {
         bSalir = (Button)findViewById(R.id.bSalir);
         bEnviar = (Button)findViewById(R.id.bEnviar);
         etTexto = (EditText) findViewById(R.id.etTexto);
+        myTV = (TextView) findViewById(R.id.tvTexto);
 
         bSalir.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,6 +111,16 @@ public class pantallaTexto extends MainActivity {
 
     }
 
+    public void SetText(String text)
+    {
+        runOnUiThread(new setUITextView(text, this));
+    }
+
+    public void AppenText(String text)
+    {
+        runOnUiThread(new appendUITextView(text+"\n", this));
+        //runOnUiThread(new appendUITextView(text+"\n", this));
+    }
 
 
 
