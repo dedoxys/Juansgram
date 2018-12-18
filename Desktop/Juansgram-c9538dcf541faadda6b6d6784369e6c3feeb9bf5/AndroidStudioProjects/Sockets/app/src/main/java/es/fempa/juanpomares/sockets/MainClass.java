@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainClass extends AppCompatActivity {
 
@@ -17,23 +18,35 @@ public class MainClass extends AppCompatActivity {
         Button btnServerIniciar = (Button)findViewById(R.id.buttonServer);
         Button btnClienteIniciar = (Button)findViewById(R.id.buttonCliente);
         final EditText editText = (EditText)findViewById(R.id.ipServer);
+        final EditText etnombre = (EditText) findViewById(R.id.etNombre);
         btnServerIniciar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainClass.this, pantallaText.class);
-                intent.putExtra("QuienSoy", "server");
-                intent.putExtra("ip",editText.getText().toString());
-                startActivity(intent);
+                if (!etnombre.getText().toString().equals("")){
+                    Intent intent = new Intent(MainClass.this, pantallaText.class);
+                    intent.putExtra("QuienSoy", "server");
+                    intent.putExtra("nombre", etnombre.getText().toString());
+                    intent.putExtra("ip",editText.getText().toString());
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(MainClass.this,"Debe introducirse nombre",Toast.LENGTH_LONG).show();
+                }
+
             }
         });
 
         btnClienteIniciar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainClass.this, pantallaText.class);
-                intent.putExtra("QuienSoy", "cliente");
-                intent.putExtra("ip",editText.getText().toString());
-                startActivity(intent);
+                if (!etnombre.getText().toString().equals("")){
+                    Intent intent = new Intent(MainClass.this, pantallaText.class);
+                    intent.putExtra("QuienSoy", "cliente");
+                    intent.putExtra("nombre", etnombre.getText().toString());
+                    intent.putExtra("ip",editText.getText().toString());
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(MainClass.this,"Debe introducirse nombre",Toast.LENGTH_LONG).show();
+                }
             }
         });
 
