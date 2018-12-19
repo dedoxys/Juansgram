@@ -15,10 +15,10 @@ public class MainClass extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button btnServerIniciar = (Button)findViewById(R.id.buttonServer);
-        Button btnClienteIniciar = (Button)findViewById(R.id.buttonCliente);
-        final EditText editText = (EditText)findViewById(R.id.ipServer);
-        final EditText etnombre = (EditText) findViewById(R.id.etNombre);
+        Button btnServerIniciar = findViewById(R.id.buttonServer);
+        Button btnClienteIniciar = findViewById(R.id.buttonCliente);
+        final EditText editText = findViewById(R.id.ipServer);
+        final EditText etnombre =  findViewById(R.id.etNombre);
         btnServerIniciar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
