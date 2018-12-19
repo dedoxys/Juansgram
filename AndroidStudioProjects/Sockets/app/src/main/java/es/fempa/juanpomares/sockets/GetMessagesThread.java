@@ -6,9 +6,9 @@ public class GetMessagesThread extends Thread {
 
     private boolean executing;
     private String line;
-    MainActivity m;
+    pantallaText m;
 
-    public GetMessagesThread(MainActivity _m){
+    public GetMessagesThread(pantallaText _m){
         this.m = _m;
     }
 

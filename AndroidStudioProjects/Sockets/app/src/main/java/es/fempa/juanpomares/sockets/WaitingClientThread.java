@@ -1,7 +1,5 @@
 package es.fempa.juanpomares.sockets;
 
-import android.widget.TextView;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -9,9 +7,9 @@ import java.net.ServerSocket;
 
 public class WaitingClientThread extends Thread{
 
-    pantallaTexto m;
+    pantallaText m;
 
-    public WaitingClientThread(pantallaTexto _m){
+    public WaitingClientThread(pantallaText _m){
         this.m = _m;
     }
 

@@ -2,9 +2,9 @@ package es.fempa.juanpomares.sockets;
 
 public class EnvioMensajesCliente extends Thread {
 
-    pantallaTexto m;
+    pantallaText m;
 
-    public EnvioMensajesCliente(pantallaTexto _m){
+    public EnvioMensajesCliente(pantallaText _m){
         this.m = _m;
     }
     public void run()
@@ -13,7 +13,7 @@ public class EnvioMensajesCliente extends Thread {
         // final int sleeptime=1000;
         try {
             Thread.sleep(1000);
-            String messages = m.etTexto.getText().toString();
+            String messages = m.nombre + ": " + m.etTexto.getText().toString();
             m.sendMessage(messages);
             m.vaciarChat();
         } catch (InterruptedException e) {
