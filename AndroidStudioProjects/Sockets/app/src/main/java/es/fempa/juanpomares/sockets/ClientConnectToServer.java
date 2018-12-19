@@ -28,7 +28,7 @@ public class ClientConnectToServer extends Thread {
             }catch(Exception e){ e.printStackTrace();}
 
             m.ConectionEstablished=true;
-            //Iniciamos el hilo para la escucha y procesado de mensajes
+            //Iniciamos el hilo para la escucha y procesado de mensaje
             (m.HiloEscucha=new GetMessagesThread(m)).start();
 
 
