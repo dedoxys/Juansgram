@@ -3,6 +3,8 @@ package es.fempa.juanpomares.sockets;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +21,7 @@ import java.util.Enumeration;
 
 public class pantallaText extends AppCompatActivity
 {
+    String nombreCabecera;
     TextView myTV;
     Button btncliente, btnservidor,bEnviar, bSalir;
     EditText ipServer;
@@ -32,6 +35,7 @@ public class pantallaText extends AppCompatActivity
     ServerSocket serverSocket;
     boolean ConectionEstablished;
     boolean server = false;
+    Toolbar my_Toolbar;
 
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
@@ -58,10 +62,14 @@ public class pantallaText extends AppCompatActivity
         bEnviar = (Button)findViewById(R.id.bEnviar);
         etTexto = (EditText) findViewById(R.id.etTexto);
 
+        my_Toolbar = findViewById(R.id.miToolbar);
+        setSupportActionBar(my_Toolbar);
+
         if (identificacion.equals("server")){
             startServer();
         }else
             startClient();
+
 
         //bSalir.setEnabled(false);
 
@@ -72,6 +80,7 @@ public class pantallaText extends AppCompatActivity
             }
         });*/
 
+
         bEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,6 +89,16 @@ public class pantallaText extends AppCompatActivity
         });
 
 
+    }
+
+    public void setCabecera(String _nombre){
+       // runOnUiThread(new );
+        my_Toolbar.setTitle(_nombre);
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu,menu);
+        return true;
     }
 
     public void startServer()

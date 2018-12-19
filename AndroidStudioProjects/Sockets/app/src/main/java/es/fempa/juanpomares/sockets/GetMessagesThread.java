@@ -23,7 +23,13 @@ public class GetMessagesThread extends Thread {
             line=ObtenerCadena();//Obtenemos la cadena del buffer
             if(!line.equals("") && line.length()!=0)//Comprobamos que esa cadena tenga contenido
             {
-                m.AppenText("Recibido: "+line);//Procesamos la cadena recibida
+                if(line.contains("###nombre##:")){
+                    String[] temp = line.split(":");
+                    m.setCabecera(temp[1]);
+                }else{
+                    m.AppenText("Recibido: "+line);//Procesamos la cadena recibida
+                }
+
             }
         }
     }

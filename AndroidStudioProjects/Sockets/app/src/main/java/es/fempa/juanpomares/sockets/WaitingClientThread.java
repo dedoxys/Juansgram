@@ -38,6 +38,8 @@ public class WaitingClientThread extends Thread{
             //Iniciamos el hilo para la escucha y procesado de mensajes
             (m.HiloEscucha = new GetMessagesThread(m)).start();
 
+
+
             //Enviamos mensajes desde el servidor.
 
             m.HiloEspera=null;
