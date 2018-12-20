@@ -27,7 +27,7 @@ public class SendMessageSocketThread extends Thread{
                             m.DisconnectSockets();
                             m.finish();
                         }
-                        m.AppenText("Enviado: " + msg);
+                        m.runOnUiThread(new setUITextView( msg,m));
                     }
                 }
 

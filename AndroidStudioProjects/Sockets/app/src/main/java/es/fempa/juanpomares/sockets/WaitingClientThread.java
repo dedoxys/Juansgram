@@ -15,7 +15,7 @@ public class WaitingClientThread extends Thread{
 
     public void run()
     {
-        m.SetText("Esperando Usuario...");
+       // m.SetText("Esperando Usuario...");
         try
         {
             //Abrimos el socket
@@ -34,7 +34,7 @@ public class WaitingClientThread extends Thread{
                 m.dataOutputStream = new DataOutputStream(m.socket.getOutputStream());
             }catch(Exception e){ e.printStackTrace();}
 
-            m.SetText("");
+            //m.SetText("");
 
             m.ConectionEstablished=true;
 

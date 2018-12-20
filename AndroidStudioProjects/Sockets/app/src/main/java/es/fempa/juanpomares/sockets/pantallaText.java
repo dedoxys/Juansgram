@@ -7,10 +7,12 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
@@ -21,7 +23,7 @@ import java.util.Enumeration;
 public class pantallaText extends AppCompatActivity
 {
     //String nombreCabecera;
-    TextView myTV;
+    Bocadillo myTV;
     Button btncliente, btnservidor,bEnviar, bSalir;
     EditText ipServer;
     EditText etTexto;
@@ -36,6 +38,8 @@ public class pantallaText extends AppCompatActivity
     boolean ConectionEstablished;
     boolean server = false;
     Toolbar my_Toolbar;
+
+    LinearLayout ltexto;
 
     DataInputStream dataInputStream;
     DataOutputStream dataOutputStream;
@@ -58,7 +62,7 @@ public class pantallaText extends AppCompatActivity
         ip = bundle.getString("ip");
         identificacion = bundle.getString("QuienSoy");
         nombre = bundle.getString("nombre");
-        myTV=findViewById(R.id.tvTexto);
+        ltexto = findViewById(R.id.lineal);
         bEnviar = findViewById(R.id.bEnviar);
         etTexto = findViewById(R.id.etTexto);
 
@@ -148,7 +152,7 @@ public class pantallaText extends AppCompatActivity
     {
 
 
-        SetText("\nComenzamos Servidor!");
+       // SetText("\nComenzamos Servidor!");
         (HiloEspera=new WaitingClientThread(this)).start();
 
        /* final pantallaText ma = this;
@@ -169,15 +173,15 @@ public class pantallaText extends AppCompatActivity
 
             (new ClientConnectToServer(TheIP, this)).start();
 
-            SetText("\nComenzamos Cliente!");
-            AppenText("\nNos intentamos conectar al servidor: "+TheIP);
+            //SetText("\nComenzamos Cliente!");
+           // AppenText("\nNos intentamos conectar al servidor: "+TheIP);
         }
 
     }
 
     public void AppenText(String text)
     {
-        runOnUiThread(new appendUITextView(text+"\n", this));
+        //runOnUiThread(new appendUITextView(text, this));
     }
 
     public void SetText(String text)
@@ -216,10 +220,18 @@ public class pantallaText extends AppCompatActivity
                     try {
                         if (socket != null)
                             socket.close();
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     } finally {
                         socket = null;
+                        if (serverSocket != null) {
+                            try {
+                                serverSocket.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
             }

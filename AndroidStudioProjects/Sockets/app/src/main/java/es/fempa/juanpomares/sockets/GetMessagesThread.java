@@ -37,7 +37,7 @@ public class GetMessagesThread extends Thread {
                         }
                     });
                 }else{
-                    m.AppenText("Recibido: "+line);//Procesamos la cadena recibida
+                    m.runOnUiThread(new appendUITextView(line, m));//Procesamos la cadena recibida
                 }
 
             }
