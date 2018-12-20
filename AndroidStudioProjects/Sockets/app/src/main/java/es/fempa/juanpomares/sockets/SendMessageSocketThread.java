@@ -26,8 +26,8 @@ public class SendMessageSocketThread extends Thread{
                         if(msg.equals("##disconeto###:")){
                             m.DisconnectSockets();
                             m.finish();
-                        }
-                        m.runOnUiThread(new setUITextView( msg,m));
+                        }else
+                            m.runOnUiThread(new setUITextView( msg,m));
                     }
                 }
 
