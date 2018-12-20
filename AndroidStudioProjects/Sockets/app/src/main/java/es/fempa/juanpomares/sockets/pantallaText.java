@@ -21,7 +21,7 @@ import java.util.Enumeration;
 
 public class pantallaText extends AppCompatActivity
 {
-    String nombreCabecera;
+    //String nombreCabecera;
     TextView myTV;
     Button btncliente, btnservidor,bEnviar, bSalir;
     EditText ipServer;
@@ -58,12 +58,29 @@ public class pantallaText extends AppCompatActivity
         ip = bundle.getString("ip");
         identificacion = bundle.getString("QuienSoy");
         nombre = bundle.getString("nombre");
-        myTV=(TextView) findViewById(R.id.tvTexto);
-        bEnviar = (Button)findViewById(R.id.bEnviar);
-        etTexto = (EditText) findViewById(R.id.etTexto);
+        myTV=findViewById(R.id.tvTexto);
+        bEnviar = findViewById(R.id.bEnviar);
+        etTexto = findViewById(R.id.etTexto);
 
         my_Toolbar = findViewById(R.id.miToolbar);
         setSupportActionBar(my_Toolbar);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                my_Toolbar.setNavigationIcon(R.drawable.ic_search_black_24dp);
+
+                my_Toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        sendMessage("##disconeto###:");
+
+
+                    }
+                });
+            }
+        });
+
+
 
         if (identificacion.equals("server")){
             startServer();
@@ -85,6 +102,7 @@ public class pantallaText extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 sendMessage(etTexto.getText().toString());
+                vaciarChat();
             }
         });
 
@@ -92,8 +110,14 @@ public class pantallaText extends AppCompatActivity
     }
 
     public void setCabecera(String _nombre){
-       // runOnUiThread(new );
-        my_Toolbar.setTitle(_nombre);
+        final String nombre = _nombre;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                my_Toolbar.setTitle(nombre);
+            }
+        });
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu){
@@ -147,15 +171,6 @@ public class pantallaText extends AppCompatActivity
     {
         if(ConectionEstablished)
         {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run()
-                {
-                    btncliente.setEnabled(true);
-                    btnservidor.setEnabled(true);
-                    ipServer.setEnabled(true);
-                }
-            });
             ConectionEstablished = false;
 
             if (HiloEscucha != null)
@@ -246,8 +261,9 @@ public class pantallaText extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        sendMessage("##disconeto###:");
         DisconnectSockets();
+        super.onDestroy();
     }
     public  void vaciarChat(){
         this.runOnUiThread(new Runnable() {

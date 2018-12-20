@@ -16,12 +16,22 @@ public class SendMessageSocketThread extends Thread{
     @Override
     public void run()
     {
-        try
-        {
-            m.dataOutputStream.writeUTF(msg);//Enviamos el mensaje
-            //dataOutputStream.close();
-            m.AppenText("Enviado: "+msg);
-        }catch (IOException e)
+
+            try
+            {
+                if (m.ConectionEstablished){
+                    m.dataOutputStream.writeUTF(msg);//Enviamos el mensaje
+                    //dataOutputStream.close();
+                    if(!msg.contains("###nombre##:")) {
+                        if(msg.equals("##disconeto###:")){
+                            m.DisconnectSockets();
+                            m.finish();
+                        }
+                        m.AppenText("Enviado: " + msg);
+                    }
+                }
+
+            } catch (IOException e)
         {
             e.printStackTrace();
             //message += "¡Algo fue mal! " + e.toString() + "\n";

@@ -48,7 +48,11 @@ public class MainClass extends AppCompatActivity {
                     Intent intent = new Intent(MainClass.this, pantallaText.class);
                     intent.putExtra("QuienSoy", "cliente");
                     intent.putExtra("nombre", etnombre.getText().toString());
-                    intent.putExtra("ip",editText.getText().toString());
+                    if ((editText.getText().toString().equals(""))){
+                        String ip = "0";
+                        intent.putExtra("ip",ip);
+                    }else
+                        intent.putExtra("ip",editText.getText().toString());
                     startActivity(intent);
                 }else{
                     Toast.makeText(MainClass.this,"Debe introducirse nombre",Toast.LENGTH_LONG).show();

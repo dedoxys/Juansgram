@@ -21,7 +21,7 @@ public class ClientConnectToServer extends Thread {
             m.SetText("Conectando con el servidor: " + mIp + ":" + m.mPuerto + "...\n\n");//Mostramos por la interfaz que nos hemos conectado al servidor} catch (IOException e) {
 
             m.socket = new Socket(mIp, m.mPuerto);//Creamos el socket
-
+            m.socket.setReuseAddress(true);
             try {
                 m.dataInputStream = new DataInputStream(m.socket.getInputStream());
                 m.dataOutputStream = new DataOutputStream(m.socket.getOutputStream());
@@ -30,6 +30,8 @@ public class ClientConnectToServer extends Thread {
             m.ConectionEstablished=true;
             //Iniciamos el hilo para la escucha y procesado de mensaje
             (m.HiloEscucha=new GetMessagesThread(m)).start();
+
+            m.sendMessage("###nombre##:"+m.nombre);
 
 
 

@@ -20,7 +20,7 @@ public class WaitingClientThread extends Thread{
         {
             //Abrimos el socket
             m.serverSocket = new ServerSocket(m.mPuerto);
-
+            m.serverSocket.setReuseAddress(true);
             //Mostramos un mensaje para indicar que estamos esperando en la direccion ip y el puerto...
             m.AppenText("Creado el servidor\n Dirección: "+m.getIpAddress()+" Puerto: "+m.serverSocket.getLocalPort());
 
@@ -37,6 +37,8 @@ public class WaitingClientThread extends Thread{
 
             //Iniciamos el hilo para la escucha y procesado de mensajes
             (m.HiloEscucha = new GetMessagesThread(m)).start();
+
+                m.sendMessage("###nombre##:"+m.nombre);
 
 
 

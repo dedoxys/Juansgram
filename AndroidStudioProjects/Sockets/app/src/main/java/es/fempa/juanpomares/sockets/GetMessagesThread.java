@@ -1,6 +1,8 @@
 package es.fempa.juanpomares.sockets;
 
+import android.telecom.DisconnectCause;
 import android.util.Log;
+import android.view.View;
 
 public class GetMessagesThread extends Thread {
 
@@ -26,6 +28,14 @@ public class GetMessagesThread extends Thread {
                 if(line.contains("###nombre##:")){
                     String[] temp = line.split(":");
                     m.setCabecera(temp[1]);
+                }else if(line.equals("##disconeto###:")){
+                    m.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            m.DisconnectSockets();
+                            m.finish();
+                        }
+                    });
                 }else{
                     m.AppenText("Recibido: "+line);//Procesamos la cadena recibida
                 }
