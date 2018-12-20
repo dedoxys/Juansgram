@@ -18,7 +18,8 @@ public class ClientConnectToServer extends Thread {
     {
         // Connect to server
         try {
-            m.SetText("Conectando con el servidor: " + mIp + ":" + m.mPuerto + "...\n\n");//Mostramos por la interfaz que nos hemos conectado al servidor} catch (IOException e) {
+            //m.SetText("Conectando con el servidor: " + mIp + ":" + m.mPuerto + "...\n\n");//Mostramos por la interfaz que nos hemos conectado al servidor} catch (IOException e) {
+            m.SetText("");
 
             m.socket = new Socket(mIp, m.mPuerto);//Creamos el socket
             m.socket.setReuseAddress(true);

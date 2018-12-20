@@ -1,6 +1,5 @@
 package es.fempa.juanpomares.sockets;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -26,8 +25,9 @@ public class pantallaText extends AppCompatActivity
     Button btncliente, btnservidor,bEnviar, bSalir;
     EditText ipServer;
     EditText etTexto;
-
+    Menu menu;
     Bundle bundle;
+    String iplocal;
     String ip;
     String identificacion;
     String nombre;
@@ -62,17 +62,27 @@ public class pantallaText extends AppCompatActivity
         bEnviar = findViewById(R.id.bEnviar);
         etTexto = findViewById(R.id.etTexto);
 
+
+
         my_Toolbar = findViewById(R.id.miToolbar);
+
+
+
         setSupportActionBar(my_Toolbar);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                my_Toolbar.setNavigationIcon(R.drawable.ic_search_black_24dp);
+                my_Toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+
+
 
                 my_Toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        sendMessage("##disconeto###:");
+                        if(ConectionEstablished)
+                            sendMessage("##disconeto###:");
+                        else
+                            finish();
 
 
                     }
@@ -120,8 +130,17 @@ public class pantallaText extends AppCompatActivity
 
     }
 
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.menu,menu);
+
+    public boolean onCreateOptionsMenu(Menu _menu){
+        this.menu = _menu;
+        getMenuInflater().inflate(R.menu.menu,_menu);
+        if(iplocal == null) {
+            menu.findItem(R.id.menuip).setTitle("IP: " + ip);
+        }else {
+            menu.findItem(R.id.menuip).setTitle("IP: " + iplocal);
+        }
+        menu.findItem(R.id.menupuerto).setTitle(String.valueOf("Puerto: " + mPuerto));
+
         return true;
     }
 
@@ -232,6 +251,9 @@ public class pantallaText extends AppCompatActivity
     public String getIpAddress()
     {
         StringBuilder ip = new StringBuilder();
+        Boolean soloUnaVez = true;
+        StringBuilder ipsola = new StringBuilder();
+
         try
         {
             Enumeration<NetworkInterface> enumNetworkInterfaces = NetworkInterface.getNetworkInterfaces();
@@ -246,6 +268,11 @@ public class pantallaText extends AppCompatActivity
                     if (inetAddress.isSiteLocalAddress())
                     {
                         ip.append("IP de Servidor: ").append(inetAddress.getHostAddress()).append("\n");
+                        if(soloUnaVez) {
+                            ipsola.append(inetAddress.getHostAddress());
+                            soloUnaVez = false;
+                        }
+
                     }
 
                 }
@@ -255,9 +282,10 @@ public class pantallaText extends AppCompatActivity
             e.printStackTrace();
             ip.append("¡Algo fue mal! ").append(e.toString()).append("\n");
         }
-
+        iplocal = ipsola.toString();
         return ip.toString();
     }
+
 
     @Override
     protected void onDestroy() {

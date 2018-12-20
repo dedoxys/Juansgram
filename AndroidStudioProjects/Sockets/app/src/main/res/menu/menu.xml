@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <group app:showAsAction="always" />
-    <item
-        android:id="@+id/anyadir"
-        android:icon="@android:drawable/ic_menu_add"
-        android:title="Anyadir"
-        app:showAsAction="always"/>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/elementos"
-        android:icon="@android:drawable/ic_dialog_dialer"
-        android:title="elementos"
-        app:showAsAction="always" />
+        android:id="@+id/menuip"
+        android:title="ip" />
+    <item
+        android:id="@+id/menupuerto"
+        android:title="ip" />
 </menu>

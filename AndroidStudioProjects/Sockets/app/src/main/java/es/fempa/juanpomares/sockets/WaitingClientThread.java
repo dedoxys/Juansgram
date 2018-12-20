@@ -22,7 +22,8 @@ public class WaitingClientThread extends Thread{
             m.serverSocket = new ServerSocket(m.mPuerto);
             m.serverSocket.setReuseAddress(true);
             //Mostramos un mensaje para indicar que estamos esperando en la direccion ip y el puerto...
-            m.AppenText("Creado el servidor\n Dirección: "+m.getIpAddress()+" Puerto: "+m.serverSocket.getLocalPort());
+            //m.AppenText("Creado el servidor\n Dirección: "+m.getIpAddress()+" Puerto: "+m.serverSocket.getLocalPort());
+            m.getIpAddress();
 
             //Creamos un socket que esta a la espera de una conexion de cliente
             m.socket = m.serverSocket.accept();
@@ -32,6 +33,8 @@ public class WaitingClientThread extends Thread{
                 m.dataInputStream = new DataInputStream(m.socket.getInputStream());
                 m.dataOutputStream = new DataOutputStream(m.socket.getOutputStream());
             }catch(Exception e){ e.printStackTrace();}
+
+            m.SetText("");
 
             m.ConectionEstablished=true;
 
